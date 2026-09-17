@@ -8,3 +8,6 @@ enabled = true
 
 [observability.logs]
 enabled = true
+
+[ai]
+binding = "AI"
