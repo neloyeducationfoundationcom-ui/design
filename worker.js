@@ -55,7 +55,7 @@ async function generateAIReply(userText, env) {
   }
 
   try {
-    const result = await env.AI.run("@cf/zai-org/glm-4.7-flash", {
+    const result = await env.AI.run("@cf/meta/llama-3.3-70b-instruct-fp8-fast", {
       messages: [
         {
           role: "system",
@@ -65,21 +65,14 @@ async function generateAIReply(userText, env) {
           role: "user",
           content: userText.slice(0, 1500)
         }
-      ]
+      ],
+      max_tokens: 220,
+      temperature: 0.4
     });
 
-    console.log("AI_RESULT_TYPE", typeof result);
-
-    const text =
-      result?.response ??
-      result?.result?.response ??
-      result?.output_text ??
-      result?.choices?.[0]?.message?.content ??
-      result?.choices?.[0]?.text;
-
-    if (typeof text === "string" && text.trim()) {
+    if (typeof result?.response === "string" && result.response.trim()) {
       console.log("AI_REPLY_OK");
-      return text.trim().slice(0, 1800);
+      return result.response.trim().slice(0, 1800);
     }
 
     console.log("AI_EMPTY_RESPONSE", JSON.stringify(result).slice(0, 500));
